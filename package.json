@@ -1,0 +1,32 @@
+{
+  "name": "openfin-packager",
+  "version": "1.0.0",
+  "description": "package openfin project into mac_os application",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoOpenfin/openfin-packager.git"
+  },
+  "keywords": [
+    "openfin",
+    "packager"
+  ],
+  "author": "bo@openfin.co",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BoOpenfin/openfin-packager/issues"
+  },
+  "homepage": "https://github.com/BoOpenfin/openfin-packager#readme",
+  "dependencies": {
+    "meow": "^5.0.0",
+    "pkg": "^4.3.4",
+    "plist": "^3.0.1"
+  },
+  "scripts": {
+    "start": "node cli",
+    "test": "grunt mochacli"
+  },
+  "bin": {
+    "openfin-packager": "cli.js"
+  }
+}
