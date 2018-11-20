@@ -13,5 +13,6 @@ Strat from a Node.js file that [Launchs Openfin](https://github.com/openfin/node
 ```sh
 $ node cli.js -t projectAppJson
 ```
-projectAppJson can be a url link like: https://cdn.openfin.co/demos/hello/app.json
+projectAppJson can be url link like: https://cdn.openfin.co/demos/hello/app.json
+
 Or a local json file with full path.
