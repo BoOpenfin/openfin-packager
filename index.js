@@ -1,10 +1,11 @@
-
 'use strict';
-var path = require('path'),
-    fs = require('fs-extra'),
-    meow;
+
 const { exec } = require('pkg')
 const plist = require('plist')
+var path = require('path'),
+    fs = require('fs-extra'),
+    meow,
+    name;
 
 function main(cli) {
     meow = cli;
@@ -12,6 +13,7 @@ function main(cli) {
     var flags = cli.flags,
         folder = flags.t || flags.target,
         icon = flags.i || flags.icon;
+    name = flags.n || flags.name || 'Demo';
 
     if (isEmpty(flags)) {
         console.log(cli.help);
@@ -37,8 +39,8 @@ function isEmpty(flags) {
     return true;
 }
 
-function createApp () {
-    var outDir = __dirname + '/Demo.app';
+function createApp() {
+    var outDir = __dirname + `/${name}.app`;
 
     fs.emptyDirSync(outDir);
     fs.mkdirSync(outDir + '/Contents');
@@ -46,27 +48,33 @@ function createApp () {
     fs.mkdirSync(outDir + '/Contents/Resources');
 }
 
-async function updateExecutable (dirname) {
+async function updateExecutable (configPath) {
     console.log('creating unix executable file');
-    const result = await exec([ path.join(dirname, 'main.js'), '--target', 'macos', '--output', 'OpenFin' ]);
+    // write main.js
 
-    var exeDir = __dirname + '/Demo.app/Contents/MacOS';
-    fs.rename(path.join(__dirname, 'OpenFin'), path.join(exeDir, 'Demo'), function (err) {
+    const content1 = 'const openfinLauncher = require(\'openfin-launcher\');\n';
+    const content2 = `openfinLauncher.launchOpenFin({configPath: \'${configPath}\' });`;
+    fs.writeFile('main.js', content1+content2, { flag: 'w' }, (err) => {console.log(err)});
+
+    const result = await exec(['main.js', '--target', 'macos', '--output', 'OpenFin']);
+
+    var exeDir = __dirname + `/${name}.app/Contents/MacOS`;
+    fs.rename(path.join(__dirname, 'OpenFin'), path.join(exeDir, name), function (err) {
       if (err) throw err
       console.log('Successfully produce executable file!')
     })
 }
 
-function addPlist () {
-    var fileName = __dirname + '/Demo.app/Contents/Info.plist';
+function addPlist() {
+    var fileName = __dirname + `/${name}.app/Contents/Info.plist`;
     var json =
       {
         "bundle-identifier": "com.openfin.app",
         "bundle-version": "0.1.1",
         "kind": "software",
-        "title": "Demo",
-        "CFBundleDisplayName": "Demo",
-        "CFBundleIconFile": "Demo.icns"
+        "title": name,
+        "CFBundleDisplayName": name,
+        "CFBundleIconFile": `${name}.icns`
       }
     ;
     fs.writeFile(fileName, plist.build(json), (err) => {
@@ -76,8 +84,8 @@ function addPlist () {
 }
 
 function addIcon (iconName) {
-    var exeDir = __dirname + '/Demo.app/Contents/Resources';
-    fs.copyFile(iconName, path.join(exeDir, 'Demo.icns'), function (err) {
+    var exeDir = __dirname + `/${name}.app/Contents/Resources`;
+    fs.copyFile(iconName, path.join(exeDir, `${name}.icns`), function (err) {
       if (err) throw err
       console.log('Successfully copy icon file!')
     })

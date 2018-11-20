@@ -10,5 +10,5 @@ package openfin project into mac_os application
 
 ## Usage
 ```sh
-$ node cli.js -t projectDir
+$ node cli.js -t projectAppJson
 ```

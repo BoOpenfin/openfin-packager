@@ -14,11 +14,12 @@ var cli = meow({
         'OpenFin packager is capable to pakage a Node.js Openfin Project into a single application file',
         'Options:',
 
-        '-t --target openfin project target folder',
+        '-t --target openfin project\'s app json',
         '-i --icon icon file for application',
+        '-n --name output application\'s name',
 
         'Example',
-        'openfin -t AppFolder -i AoppIcon.icns'
+        'openfin -t AppJson -i AppIcon.icns -n AppName'
     ].join('\n')
 });
 
