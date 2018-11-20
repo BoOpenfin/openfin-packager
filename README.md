@@ -6,9 +6,9 @@ package openfin project into mac_os application
 
 ##### Mac
 
-* [Node.js](https://nodejs.org/) v0.10 or higher
+* [Node.js](https://nodejs.org/) v10.X
 
 ## Usage
 ```sh
-$ node cli.js projectDir projectIconFile
+$ node cli.js -t projectDir
 ```

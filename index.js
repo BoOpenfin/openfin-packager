@@ -8,13 +8,33 @@ const plist = require('plist')
 
 function main(cli) {
     meow = cli;
-    //console.log(cli);
-    console.log(cli.input[0]);
-    console.log(cli.input[1]);
+
+    var flags = cli.flags,
+        folder = flags.t || flags.target,
+        icon = flags.i || flags.icon;
+
+    if (isEmpty(flags)) {
+        console.log(cli.help);
+        return;
+    }
+
     createApp();
-    updateExecutable(cli.input[0]);
-    addIcon(cli.input[1]);
+    updateExecutable(folder);
+
+    if(icon) {
+        addIcon(icon);
+    }
     addPlist();
+}
+
+//makeshift is object empty function
+function isEmpty(flags) {
+    for (var key in flags) {
+        if (flags.hasOwnProperty(key) && flags[key] !== false) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function createApp () {

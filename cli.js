@@ -5,10 +5,7 @@ var meow = require('meow'),
     openfinPackager = require('./');
 const options = {
     flags: {
-        name: { alias: 'i', type: 'string' },
-        url: { alias: 'u', type: 'string' },
-        config: { alias: 'c', type: 'string' },
-        launch: { alias: 'l', type: 'boolean' }
+        target: { alias: 't', type: 'string' }
     }
 };
 
@@ -17,10 +14,11 @@ var cli = meow({
         'OpenFin packager is capable to pakage a Node.js Openfin Project into a single application file',
         'Options:',
 
+        '-t --target openfin project target folder',
         '-i --icon icon file for application',
-        
+
         'Example',
-        'openfin ../AppFolder APP_NAME --icon=../icon.icons'
+        'openfin -t AppFolder -i AoppIcon.icns'
     ].join('\n')
 });
 
