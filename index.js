@@ -48,17 +48,31 @@ function createApp() {
     fs.mkdirSync(outDir + '/Contents/Resources');
 }
 
+function isURL(str) {
+    return (typeof str === 'string') && str.lastIndexOf('http') >= 0;
+}
+
 async function updateExecutable (configPath) {
+    var exeDir = __dirname + `/${name}.app/Contents/MacOS`;
     console.log('creating unix executable file');
+
     // write main.js
+    const contentHeader = 'const openfinLauncher = require(\'openfin-launcher\');\nconst path = require(\'path\');\n';
+    var contentBody;
 
-    const content1 = 'const openfinLauncher = require(\'openfin-launcher\');\n';
-    const content2 = `openfinLauncher.launchOpenFin({configPath: \'${configPath}\' });`;
-    fs.writeFile('main.js', content1+content2, { flag: 'w' }, (err) => {console.log(err)});
+    if (isURL(configPath)) {
+        contentBody = `openfinLauncher.launchOpenFin({configPath: \'${configPath}\' });`;
+    } else {
+        console.log('deal with local file');
+        console.log(path.dirname(process.execPath));
+        //contentBody = `openfinLauncher.launchOpenFin({configPath: \'app.json\' });`;
+        contentBody = `openfinLauncher.launchOpenFin({configPath: path.resolve(path.dirname(process.execPath), \'app.json\') });`;
+        fs.copyFile(path.resolve(configPath), path.join(exeDir, 'app.json'));
+    }
 
+    fs.writeFile('main.js', contentHeader+contentBody, { flag: 'w' }, (err) => {console.log(err)});
     const result = await exec(['main.js', '--target', 'macos', '--output', 'OpenFin']);
 
-    var exeDir = __dirname + `/${name}.app/Contents/MacOS`;
     fs.rename(path.join(__dirname, 'OpenFin'), path.join(exeDir, name), function (err) {
       if (err) throw err
       console.log('Successfully produce executable file!')
